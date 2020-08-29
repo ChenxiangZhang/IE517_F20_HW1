@@ -56,7 +56,7 @@ import numpy as np
 x_min, x_max = X_train[:, 0].min() - .5, X_train[:, 0].max() + .5
 y_min, y_max = X_train[:, 1].min() - .5, X_train[:, 1].max() + .5
 #error in case Xs or xs
-xs = np.arange(x_min, x_max, 0.5)
+Xs = np.arange(x_min, x_max, 0.5)
 fig, axes = plt.subplots(1, 3)
 fig.set_size_inches(10, 6)
 for i in [0, 1, 2]:
@@ -69,8 +69,39 @@ for i in [0, 1, 2]:
     #error here need plt.
     plt.sca(axes[i])
     plt.scatter(X_train[:, 0], X_train[:, 1], c=y_train, cmap=plt.cm.prism)
-    ys = (-clf.intercept_[i] - xs * clf.coef_[i, 0]) / clf.coef_[i, 1]
-    plt.plot(xs, ys)#, hold=True
+    ys = (-clf.intercept_[i] - Xs * clf.coef_[i, 0]) / clf.coef_[i, 1]
+    plt.plot(Xs, ys)#, hold=True
+    
+print( clf.predict(scaler.transform([[4.7, 3.1]])) )
+#[0]
+
+print( clf.decision_function(scaler.transform([[4.7, 3.1]])) )
+#[[ 19.73905808 8.13288449 -28.63499119]]
+
+from sklearn import metrics
+y_train_pred = clf.predict(X_train)
+print( metrics.accuracy_score(y_train, y_train_pred) )
+#0.821428571429
+
+y_pred = clf.predict(X_test)
+print( metrics.accuracy_score(y_test, y_pred) )
+#0.684210526316
+
+print( metrics.classification_report(y_test, y_pred, target_names=iris.target_names) )
+#precision recall f1-score support
+#setosa 1.00 1.00 1.00 8
+#versicolor 0.43 0.27 0.33 11
+#virginica 0.65 0.79 0.71 19
+#avg / total 0.66 0.68 0.66 38
+
+print( metrics.confusion_matrix(y_test, y_pred) )
+#[[ 8 0 0]
+#[ 0 3 8]
+#[ 0 4 15]]
+
+print("My chinese name is Chenxiang Zhang and you can call me franklin")
+print("My NetID is: cz52")
+print("I hereby certify that(Xs, ys)#, hold=True
     
 print( clf.predict(scaler.transform([[4.7, 3.1]])) )
 #[0]
@@ -102,6 +133,7 @@ print( metrics.confusion_matrix(y_test, y_pred) )
 print("My chinese name is Chenxiang Zhang and you can call me franklin")
 print("My NetID is: cz52")
 print("I hereby certify that I have read the University policy on Academic Integrity and that I am not in violation.")
+######STOP HERE###################### I have read the University policy on Academic Integrity and that I am not in violation.")
 ######STOP HERE######################
 
 
@@ -121,7 +153,7 @@ clf = Pipeline([( 'scaler', StandardScaler()),
         ('linear_model', SGDClassifier())
 ])
 # create a k-fold cross validation iterator of k=5 folds
-cv= KFold(X.shape[0],n_splits=5, shuffle=True, random_state=33)
+cv= KFold(n_splits=5, shuffle=True, random_state=33)
 #cv=kf.split(X.shape[0]);
 # by default the score used is the one returned by score method of the estimator (accuracy)
 scores = cross_val_score(clf, X, y, cv=cv,scoring='accuracy')
